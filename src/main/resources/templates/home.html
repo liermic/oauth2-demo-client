@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head>
+        <title>Demonstration of OAuth 2.0 Flows</title>
+        <!-- <link rel="stylesheet" type="text/css" href="/css/saplDemoMain.css"> -->
+    </head>
+    <body>
+        <form id="flowSelection" th:action="@{/startFlow}" method="post" th:object="${oauthFlow}">
+    	
+    	<h2>Select Flow for OAuth 2.0</h2>
+    	<h3>Server Configuration</h3>
+    	Authorization URL: <input type="text" th:field="*{authorizeUrl}" /><br/>
+	   	Token URL: <input type="text" th:field="*{tokenUrl}" /><br/>
+	   		
+    	<h3>Client Configuration</h3>
+    	Client Key: <input type="text" th:field="*{key}" /><br/>
+    	Client Secret: <input type="text" th:field="*{secret}" /><br/>
+    	Redirect URI: <input type="text" th:field="*{redirectUri}" /><br/>
+    	Client State: <input type="text" th:field="*{state}" /><br/>
+
+		<h3>Select Flow</h3>
+		<div class="form-group blu-margin">
+			<select class="form-control" th:field="*{type}"
+				id="oauthFlow">
+				<option th:each="flowType : ${oauthFlowTypes}" th:value="${flowType.id}"
+					th:text="${flowType.name}"></option>
+			</select>
+		</div>
+		<p/>
+		<div>
+			<input type="submit" value="Start Flow" />
+		</div>
+	</form>
+    </body>
+</html>

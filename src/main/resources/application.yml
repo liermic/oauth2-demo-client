@@ -1,0 +1,13 @@
+server:
+  port: 8086
+ 
+oauth:
+  server:
+    authorize-url: https://localhost:8443/oauth/authorize
+    token-url: https://localhost:8443/oauth/tenants/C9AAKN4hRm6blJDnZO7sng/organizations/oGpIXIDASNe651uhAg4D0w/token
+    
+  client:
+    key: OVfR_-Y4QuqTVxuRLVDvZg
+    secret: Trc1YF_JTtyhjrnbFN5Q9Q
+    redirect-uri: http://localhost:8086/api/authcode
+    
