@@ -1,7 +1,9 @@
 package de.lierath.oauth2.client.model;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +25,20 @@ public enum OauthFlowType {
 	@Getter
 	private final String name;
 
+	private static Map<String, OauthFlowType> cache = new HashMap<>();
+
+	static {
+		for (OauthFlowType t : values()) {
+			cache.put(t.getId(), t);
+		}
+	}
+
 	public static List<OauthFlowType> getAll() {
 		return Arrays.asList(values());
+	}
+
+	public static OauthFlowType forId(String id) {
+		return cache.get(id);
 	}
 
 }

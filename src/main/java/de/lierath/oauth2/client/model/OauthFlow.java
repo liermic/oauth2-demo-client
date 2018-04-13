@@ -1,6 +1,15 @@
 package de.lierath.oauth2.client.model;
 
 import java.io.Serializable;
+import java.net.URI;
+import java.net.URISyntaxException;
+
+import com.nimbusds.oauth2.sdk.ClientCredentialsGrant;
+import com.nimbusds.oauth2.sdk.TokenRequest;
+import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
+import com.nimbusds.oauth2.sdk.auth.ClientSecretPost;
+import com.nimbusds.oauth2.sdk.auth.Secret;
+import com.nimbusds.oauth2.sdk.id.ClientID;
 
 import lombok.Data;
 
@@ -32,5 +41,18 @@ public class OauthFlow implements Serializable {
 	private String redirectUri;
 
 	private String state;
+
+	public TokenRequest toTokenRequest() throws URISyntaxException {
+		OauthFlowType flowType = OauthFlowType.forId(this.type);
+		switch (flowType) {
+		case CLIENT:
+			URI uri = new URI(this.tokenUrl);
+			ClientAuthentication auth = new ClientSecretPost(new ClientID(this.key), new Secret(this.secret));
+			return new TokenRequest(uri, auth, new ClientCredentialsGrant());
+		default:
+			break;
+		}
+		return null;
+	}
 
 }
