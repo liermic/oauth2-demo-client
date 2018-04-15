@@ -16,6 +16,8 @@ public class OauthClientConfiguration {
 
 	private String redirectUri;
 
+	private String scope;
+
 	private String state;
 
 }

@@ -9,5 +9,6 @@ oauth:
   client:
     key: OVfR_-Y4QuqTVxuRLVDvZg
     secret: Trc1YF_JTtyhjrnbFN5Q9Q
+    scope: email:read userinfo:read
     redirect-uri: http://localhost:8086/api/authcode
     

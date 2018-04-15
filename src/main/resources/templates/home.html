@@ -3,34 +3,70 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
     <head>
         <title>Demonstration of OAuth 2.0 Flows</title>
-        <!-- <link rel="stylesheet" type="text/css" href="/css/saplDemoMain.css"> -->
+        <link rel="stylesheet" type="text/css" href="/css/default.css">
     </head>
     <body>
         <form id="flowSelection" th:action="@{/startFlow}" method="post" th:object="${oauthFlow}">
     	
     	<h2>Select Flow for OAuth 2.0</h2>
-    	<h3>Server Configuration</h3>
-    	Authorization URL: <input type="text" th:field="*{authorizeUrl}" /><br/>
-	   	Token URL: <input type="text" th:field="*{tokenUrl}" /><br/>
+    	<div>
+			<h3>Server Configuration</h3>
+    	
+	    	<label for="authorizeUrl">Authorization URL:</label>
+	    	<input id="authorizeUrl" type="text" th:field="*{authorizeUrl}" width="200" />
+	    	<br/>
+		   	
+		   	<label for="tokenUrl">Token URL:</label>
+		   	<input id="tokenUrl" type="text" th:field="*{tokenUrl}" width="200" />
+		   	<br/>    	
+    	</div>
 	   		
-    	<h3>Client Configuration</h3>
-    	Client Key: <input type="text" th:field="*{key}" /><br/>
-    	Client Secret: <input type="text" th:field="*{secret}" /><br/>
-    	Redirect URI: <input type="text" th:field="*{redirectUri}" /><br/>
-    	Client State: <input type="text" th:field="*{state}" /><br/>
+	   	<div>
+	    	<h3>Client Configuration</h3>
+	    	<label for="clientKey">Client Key:</label>
+	    	<input id="clientKey" type="text" th:field="*{key}" width="100" />
+	    	<br/>
+	    	
+	    	<label for="clientSecret">Client Secret:</label>
+	    	<input id="clientSecret" type="text" th:field="*{secret}" width="100" />
+	    	<br/>
+	    	
+	    	<label for="redirectURI">Redirect URI:</label>
+	    	<input id="redirectURI" type="text" th:field="*{redirectUri}" width="200" />
+	    	<br/>
+	    	
+	    	<label for="scope">Request Scope:</label>
+	    	<input id="scope" type="text" th:field="*{scope}" width="100" />
+	    	<br/>
+	    	
+	    	<p>
+	    	Public: oVGaMYCGRBCd4EG9VUTi8w <br/>
+	    	Trusted: OVfR_-Y4QuqTVxuRLVDvZg &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Trc1YF_JTtyhjrnbFN5Q9Q
+	    	</p>
+	   	</div>
 
-		<h3>Select Flow</h3>
-		<div class="form-group blu-margin">
-			<select class="form-control" th:field="*{type}"
-				id="oauthFlow">
-				<option th:each="flowType : ${oauthFlowTypes}" th:value="${flowType.id}"
-					th:text="${flowType.name}"></option>
-			</select>
+	   	<div>
+	    	<h3>User for Password Grant</h3>
+	    	<label for="username">Username:</label>
+	    	<input id="username" type="text" th:field="*{username}" width="100" />
+	    	<br/>
+	    	
+	    	<label for="userpassword">User password:</label>
+	    	<input id="userpassword" type="text" th:field="*{userpassword}" width="100" />
+	    	<br/>
+	   	</div>
+
+		<div>
+			<h3>Select Flow</h3>
+				<label for="oauthFlow">OAuth flow to start:</label>
+				<select class="form-control" th:field="*{type}"
+					id="oauthFlow">
+					<option th:each="flowType : ${oauthFlowTypes}" th:value="${flowType.id}"
+						th:text="${flowType.name}"></option>
+				</select>
 		</div>
 		<p/>
-		<div>
-			<input type="submit" value="Start Flow" />
-		</div>
+		<input type="submit" value="Start Flow" />
 	</form>
     </body>
 </html>

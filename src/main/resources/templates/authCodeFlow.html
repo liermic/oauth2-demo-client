@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head>
+        <title>Demonstration of OAuth 2.0 Flows</title>
+        <link rel="stylesheet" type="text/css" href="/css/default.css">
+    </head>
+    <body>
+    	<h2>Authorization Code Grant</h2>
+    	
+        <div>
+	        <h3>Authorization Code Request</h3>
+	        <p>
+				<label for="authorizeRequest">Authorization Code Request:</label>
+				<textarea id="authorizeRequest" th:field="*{result.authorizeRequest}" ></textarea>
+			</p>
+        </div>
+
+        <div>
+	        <h3>Authorization Code Response</h3>
+	        <label for="authorizeResponse">Response: </label>
+			<input id="authorizeResponse" type="text" th:field="*{result.authorizeResponse}" />
+	        <br/>
+			<label for="authCode">Authorization Code: </label>
+			<input id="authCode" type="text" th:field="*{result.authorizationCode}" />
+        </div>
+        
+        <div>
+	        <h3>Token Request:</h3>
+	        <p>
+				<label for="tokenRequest">Token Request:</label>
+				<textarea id="tokenRequest" th:field="*{result.tokenRequest}" ></textarea>
+			</p>
+		</div>
+        <div>
+        	<h3>Token Response:</h3>
+			<p>
+				<label for="oauthResponse">Token Response:</label>
+				<textarea id="oauthResponse" th:field="*{result.tokenResponse}" ></textarea>
+			</p>
+			<p>
+				<label for="jwt">JWT:</label> 
+				<textarea id="jwt" th:field="*{result.accessToken}" ></textarea>
+			</p>
+			<p>
+				<label for="claimsSet">Decoded JWT:</label>
+				<textarea id="claimsSet" th:field="*{result.jwtClaimsSet}" ></textarea>
+			</p>
+        </div>
+        
+    </body>
+</html>

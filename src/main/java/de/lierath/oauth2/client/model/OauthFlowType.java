@@ -5,19 +5,44 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.lierath.oauth2.client.execution.AuthorizationCodeFlowExecution;
+import de.lierath.oauth2.client.execution.ClientCredentialsFlowExecution;
+import de.lierath.oauth2.client.execution.ImplicitGrantFlowExecution;
+import de.lierath.oauth2.client.execution.OauthFlowExecution;
+import de.lierath.oauth2.client.execution.PasswordGrantFlowExecution;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum OauthFlowType {
 
-	AUTH_CODE("authCodeFlow", "Authorization Code Grant"),
+	AUTH_CODE("authCodeFlow", "Authorization Code Grant") {
+		@Override
+		public OauthFlowExecution getExecution() {
+			return new AuthorizationCodeFlowExecution();
+		}
+	},
 
-	IMPLICIT("implicitFlow", "Implicit Grant"),
+	IMPLICIT("implicitFlow", "Implicit Grant") {
+		@Override
+		public OauthFlowExecution getExecution() {
+			return new ImplicitGrantFlowExecution();
+		}
+	},
 
-	PASSWORD("passwordFlow", "Resource Owner Password Grant"),
+	PASSWORD("passwordFlow", "Resource Owner Password Grant") {
+		@Override
+		public OauthFlowExecution getExecution() {
+			return new PasswordGrantFlowExecution();
+		}
+	},
 
-	CLIENT("clientCredentialFlow", "Client Credentials Grant");
+	CLIENT("clientCredentialsFlow", "Client Credentials Grant") {
+		@Override
+		public OauthFlowExecution getExecution() {
+			return new ClientCredentialsFlowExecution();
+		}
+	};
 
 	@Getter
 	private final String id;
@@ -40,5 +65,7 @@ public enum OauthFlowType {
 	public static OauthFlowType forId(String id) {
 		return cache.get(id);
 	}
+
+	public abstract OauthFlowExecution getExecution();
 
 }
