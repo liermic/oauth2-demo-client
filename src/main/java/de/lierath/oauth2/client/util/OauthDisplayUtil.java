@@ -1,8 +1,9 @@
 package de.lierath.oauth2.client.util;
 
+import java.util.Base64;
+
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
-import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONStyle;
@@ -31,8 +32,8 @@ public class OauthDisplayUtil {
 		String token = accessToken.toJSONObject().getAsString("access_token");
 		String[] splitToken = token.split(JWT_SEPERATOR_REGEX);
 
-		String jwsHeader = new String(Base64.decode(splitToken[0]));
-		String claimsSet = new String(Base64.decode(splitToken[1]));
+		String jwsHeader = new String(Base64.getDecoder().decode(splitToken[0]));
+		String claimsSet = new String(Base64.getDecoder().decode(splitToken[1]));
 
 		JSONParser parser = new JSONParser(JSONParser.MODE_JSON_SIMPLE);
 		JSONObject jwsHeaderJson = parser.parse(jwsHeader, JSONObject.class);

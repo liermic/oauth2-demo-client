@@ -32,7 +32,12 @@
 	    	<br/>
 	    	
 	    	<label for="redirectURI">Redirect URI:</label>
-	    	<input id="redirectURI" type="text" th:field="*{redirectUri}" width="200" />
+	    	<select class="form-control" th:field="*{redirectUri}"
+				id="redirectURI">
+				<option th:value="'http://localhost:8086/api/authcode'" th:text="'http://localhost:8086/api/authcode'"></option>
+				<option th:value="'http://localhost:8086/api/decodeToken'" th:text="'http://localhost:8086/api/decodeToken'"></option>
+			</select>
+	    	<!-- <input id="redirectURI" type="text" th:field="*{redirectUri}" width="200" /> -->
 	    	<br/>
 	    	
 	    	<label for="scope">Request Scope:</label>

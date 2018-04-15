@@ -102,8 +102,8 @@ public class Oauth2ClientController {
 		HTTPRequest httpRequest;
 		try {
 			httpRequest = ServletUtils.createHTTPRequest(httpServletRequest);
-			log.debug(httpRequest.getURL().toString());
-			log.debug("Query:" + httpRequest.getQuery());
+			log.info(httpRequest.getURL().toString());
+			log.info("Query:" + httpRequest.getQuery());
 			AuthorizationResponse codeResponse = AuthorizationResponse.parse(httpRequest);
 			OauthSession session = OauthSession.get(codeResponse.getState().getValue());
 			OauthFlowResultData result = session.getResult();
