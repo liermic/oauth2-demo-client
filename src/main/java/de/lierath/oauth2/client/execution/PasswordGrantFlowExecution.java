@@ -64,7 +64,7 @@ public class PasswordGrantFlowExecution implements OauthFlowExecution {
 		}
 
 		result.setOauthFlowType(OauthFlowType.PASSWORD.getId());
-		result.addAccessTokenResponse(response);
+		result.addAccessTokenResponse(response, inputData.getJwkUrl());
 
 		session.setResult(result);
 		session.setNextPage(result.getOauthFlowType());

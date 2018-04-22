@@ -54,7 +54,7 @@ public class ClientCredentialsFlowExecution implements OauthFlowExecution {
 		}
 
 		result.setOauthFlowType(OauthFlowType.CLIENT.getId());
-		result.addAccessTokenResponse(response);
+		result.addAccessTokenResponse(response, inputData.getJwkUrl());
 
 		session.setResult(result);
 		session.setNextPage(result.getOauthFlowType());

@@ -12,6 +12,7 @@ public class OauthFlowData implements Serializable {
 		OauthFlowData flow = new OauthFlowData();
 		flow.authorizeUrl = serverConf.getAuthorizeUrl();
 		flow.tokenUrl = serverConf.getTokenUrl();
+		flow.jwkUrl = serverConf.getJwkUrl();
 		flow.key = clientConf.getKey();
 		flow.secret = clientConf.getSecret();
 		flow.redirectUri = clientConf.getRedirectUri();
@@ -25,6 +26,8 @@ public class OauthFlowData implements Serializable {
 	private String authorizeUrl;
 
 	private String tokenUrl;
+
+	private String jwkUrl;
 
 	private String key;
 

@@ -9,15 +9,28 @@
         <form id="flowSelection" th:action="@{/startFlow}" method="post" th:object="${oauthFlow}">
     	
     	<h2>Select Flow for OAuth 2.0</h2>
+    	
+    	<div>
+			<h3>Select Flow</h3>
+				<label for="oauthFlow">OAuth flow to start:</label>
+				<select class="form-control" th:field="*{type}"
+					id="oauthFlow">
+					<option th:each="flowType : ${oauthFlowTypes}" th:value="${flowType.id}"
+						th:text="${flowType.name}"></option>
+				</select>
+		<input type="submit" value="Start Flow" />
+		</div>
     	<div>
 			<h3>Server Configuration</h3>
     	
 	    	<label for="authorizeUrl">Authorization URL:</label>
 	    	<input id="authorizeUrl" type="text" th:field="*{authorizeUrl}" width="200" />
 	    	<br/>
-		   	
 		   	<label for="tokenUrl">Token URL:</label>
 		   	<input id="tokenUrl" type="text" th:field="*{tokenUrl}" width="200" />
+		   	<br/>    	
+		   	<label for="jwkUrl">JWK URL:</label>
+		   	<input id="jwkUrl" type="text" th:field="*{jwkUrl}" width="200" />
 		   	<br/>    	
     	</div>
 	   		
@@ -45,8 +58,8 @@
 	    	<br/>
 	    	
 	    	<p>
-	    	Public: oVGaMYCGRBCd4EG9VUTi8w <br/>
-	    	Trusted: OVfR_-Y4QuqTVxuRLVDvZg &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Trc1YF_JTtyhjrnbFN5Q9Q
+	    	Public: jJgIcer4QiKcyqFXQ6DXJQ <br/>
+	    	Trusted: XPOnkRPuRFSFx65hnUmuCw &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; rpDuoW-mTYCcnmZecFdaFw
 	    	</p>
 	   	</div>
 
@@ -61,17 +74,6 @@
 	    	<br/>
 	   	</div>
 
-		<div>
-			<h3>Select Flow</h3>
-				<label for="oauthFlow">OAuth flow to start:</label>
-				<select class="form-control" th:field="*{type}"
-					id="oauthFlow">
-					<option th:each="flowType : ${oauthFlowTypes}" th:value="${flowType.id}"
-						th:text="${flowType.name}"></option>
-				</select>
-		</div>
-		<p/>
-		<input type="submit" value="Start Flow" />
 	</form>
     </body>
 </html>

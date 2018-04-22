@@ -9,14 +9,14 @@
     	<h2>Implicit Grant</h2>
     	
         <div>
-	        <h3>Token Request</h3>
+	        <h3>Authorize Request</h3>
 	        <p>
-				<label for="tokenRequest">OAuth Request:</label>
-				<textarea id="tokenRequest" th:field="*{result.tokenRequest}" ></textarea>
+				<label for="authorizeRequest">OAuth Request:</label>
+				<textarea id="authorizeRequest" th:field="*{result.authorizeRequest}" ></textarea>
 			</p>
         </div>
         
-        <div>
+        <div th:style="${result.isValidSignature} ? 'background-color:#99ff99' : 'background-color:#ff9999'">
 	        <h3>Authorize Response with Token</h3>
 			<p>
 				<label for="oauthResponse">OAuth Response:</label>

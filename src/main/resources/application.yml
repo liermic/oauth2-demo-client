@@ -4,11 +4,14 @@ server:
 oauth:
   server:
     authorize-url: https://localhost:8443/oauth/authorize
-    token-url: https://localhost:8443/oauth/tenants/C9AAKN4hRm6blJDnZO7sng/organizations/oGpIXIDASNe651uhAg4D0w/token
+    tenant-id: VSGpKYfVRGaSG0np31jxHg
+    organization-id: cWvbPa9VTpGXqDk_bZy0ew
+    token-url: https://localhost:8443/oauth/tenants/tenantId/organizations/organizationId/token
+    jwk-url: https://localhost:8443/oauth/tenants/tenantId/organizations/organizationId/jwk
     
   client:
-    key: OVfR_-Y4QuqTVxuRLVDvZg
-    secret: Trc1YF_JTtyhjrnbFN5Q9Q
+    key: XPOnkRPuRFSFx65hnUmuCw
+    secret: rpDuoW-mTYCcnmZecFdaFw
     scope: email:read userinfo:read
     redirect-uri: http://localhost:8086/api/authcode
     

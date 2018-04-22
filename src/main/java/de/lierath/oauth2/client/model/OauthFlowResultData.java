@@ -9,6 +9,7 @@ import com.nimbusds.oauth2.sdk.TokenResponse;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 
 import de.lierath.oauth2.client.execution.OauthExecutionException;
+import de.lierath.oauth2.client.util.JwtUtil;
 import de.lierath.oauth2.client.util.OauthDisplayUtil;
 import lombok.Data;
 
@@ -31,7 +32,9 @@ public class OauthFlowResultData {
 
 	private String jwtClaimsSet;
 
-	public void addAccessTokenResponse(TokenResponse response) {
+	private Boolean isValidSignature;
+
+	public void addAccessTokenResponse(TokenResponse response, String jwkUrl) {
 		if (response.indicatesSuccess()) {
 			// token response
 			AccessTokenResponse successResponse = response.toSuccessResponse();
@@ -40,6 +43,7 @@ public class OauthFlowResultData {
 			AccessToken accessToken = successResponse.getTokens().getAccessToken();
 			String tokenString = OauthDisplayUtil.prettyPrint(accessToken);
 			this.accessToken = tokenString;
+			this.isValidSignature = JwtUtil.validateTokenSignature(accessToken.getValue(), jwkUrl);
 			// decoded claims set
 			try {
 				String claimsSet = OauthDisplayUtil.decodeClaimsSet(accessToken);
@@ -54,7 +58,7 @@ public class OauthFlowResultData {
 		}
 	}
 
-	public void addAuthorizeTokenResponse(AuthorizationResponse response) {
+	public void addAuthorizeTokenResponse(AuthorizationResponse response, String jwkUrl) {
 		if (response.indicatesSuccess()) {
 			AuthorizationSuccessResponse successResponse = response.toSuccessResponse();
 			successResponse.getAccessToken();
@@ -64,6 +68,7 @@ public class OauthFlowResultData {
 			AccessToken accessToken = successResponse.getAccessToken();
 			String tokenString = OauthDisplayUtil.prettyPrint(accessToken);
 			this.accessToken = tokenString;
+			this.isValidSignature = JwtUtil.validateTokenSignature(accessToken.getValue(), jwkUrl);
 			// decoded claims set
 			try {
 				String claimsSet = OauthDisplayUtil.decodeClaimsSet(accessToken);

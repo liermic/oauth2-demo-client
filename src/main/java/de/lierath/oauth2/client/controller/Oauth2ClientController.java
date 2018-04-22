@@ -89,7 +89,7 @@ public class Oauth2ClientController {
 			AuthorizationResponse tokenResponse = AuthorizationResponse.parse(httpRequest);
 			State state = tokenResponse.getState();
 			OauthSession session = OauthSession.get(state.getValue());
-			session.getResult().addAuthorizeTokenResponse(tokenResponse);
+			session.getResult().addAuthorizeTokenResponse(tokenResponse, session.getInputData().getJwkUrl());
 			model.addAttribute("result", session.getResult());
 		} catch (IOException | ParseException e) {
 			log.error("Unable to parse incoming http request.", e);
@@ -143,7 +143,7 @@ public class Oauth2ClientController {
 		TokenResponse response = TokenResponse.parse(httpRequest.send());
 
 		// add token to result
-		result.addAccessTokenResponse(response);
+		result.addAccessTokenResponse(response, inputData.getJwkUrl());
 	}
 
 }
