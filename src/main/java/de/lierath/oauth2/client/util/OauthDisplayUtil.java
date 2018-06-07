@@ -3,6 +3,7 @@ package de.lierath.oauth2.client.util;
 import java.util.Base64;
 
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
+import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 
 import net.minidev.json.JSONObject;
@@ -60,6 +61,15 @@ public class OauthDisplayUtil {
 			sb.append("Authorization: " + r.getAuthorization()).append(NEW_LINE);
 		}
 		sb.append("Query: " + r.getQuery()).append(NEW_LINE);
+		return sb.toString();
+	}
+
+	public static String prettyPrint(HTTPResponse r) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Headers:").append(NEW_LINE);
+		sb.append(r.getHeaders()).append(NEW_LINE).append(NEW_LINE);
+		sb.append("Content: " + NEW_LINE);
+		sb.append(r.getContent());
 		return sb.toString();
 	}
 }

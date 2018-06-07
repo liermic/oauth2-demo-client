@@ -30,11 +30,11 @@ import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.State;
 
 import de.lierath.oauth2.client.execution.OauthFlowExecution;
-import de.lierath.oauth2.client.model.OauthClientConfiguration;
 import de.lierath.oauth2.client.model.OauthFlowData;
 import de.lierath.oauth2.client.model.OauthFlowResultData;
 import de.lierath.oauth2.client.model.OauthFlowType;
 import de.lierath.oauth2.client.model.OauthServerConfiguration;
+import de.lierath.oauth2.client.model.OauthTrustedClientConfiguration;
 import de.lierath.oauth2.client.util.OauthDisplayUtil;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +46,7 @@ import lombok.extern.slf4j.Slf4j;
 public class Oauth2ClientController {
 
 	@NonNull
-	OauthClientConfiguration clientConf;
+	OauthTrustedClientConfiguration clientConf;
 
 	@NonNull
 	OauthServerConfiguration serverConf;
@@ -66,10 +66,12 @@ public class Oauth2ClientController {
 		bindingResult.getModel();
 		// start session for result handling
 		OauthSession session = OauthSession.open();
+		session.setInputData(oauthFlow);
 		// execute flow
 		OauthFlowType flowType = OauthFlowType.forId(oauthFlow.getType());
 		OauthFlowExecution execution = flowType.getExecution();
 		OauthFlowResultData result = execution.execute(oauthFlow, session);
+		result.setExpectedSignatureAlgorithm(oauthFlow.getExpectedSignatureAlgorithm());
 		model.addAttribute("result", result);
 		// redirect to result page (i.e. "clientCredentials")
 		return session.getNextPage(); // return "redirect:/home";

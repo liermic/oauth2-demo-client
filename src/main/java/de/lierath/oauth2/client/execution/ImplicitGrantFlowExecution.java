@@ -44,7 +44,7 @@ public class ImplicitGrantFlowExecution implements OauthFlowExecution {
 		Scope scope = Scope.parse(inputData.getScope());
 		State state = new State(session.getId().toString());
 		AuthorizationRequest request = new AuthorizationRequest(uri, rt, ResponseMode.FRAGMENT, clientId, redirectURI,
-				scope, state);
+				scope, state, null, null);
 
 		OauthFlowResultData result = new OauthFlowResultData();
 		result.setOauthFlowType(OauthFlowType.IMPLICIT.getId());

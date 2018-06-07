@@ -20,6 +20,8 @@ public class OauthServerConfiguration {
 
 	private String organizationId;
 
+	private String expectedSignatureAlgorithm;
+
 	public String getAuthorizeUrl() {
 		return replacePlaceholders(this.authorizeUrl);
 	}
@@ -35,4 +37,5 @@ public class OauthServerConfiguration {
 	private String replacePlaceholders(String url) {
 		return url.replace("tenantId", this.tenantId).replace("organizationId", this.organizationId);
 	}
+
 }

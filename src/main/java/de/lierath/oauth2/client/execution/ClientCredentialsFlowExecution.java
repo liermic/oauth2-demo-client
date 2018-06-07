@@ -10,9 +10,10 @@ import com.nimbusds.oauth2.sdk.Scope;
 import com.nimbusds.oauth2.sdk.TokenRequest;
 import com.nimbusds.oauth2.sdk.TokenResponse;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
-import com.nimbusds.oauth2.sdk.auth.ClientSecretPost;
+import com.nimbusds.oauth2.sdk.auth.ClientSecretBasic;
 import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
+import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 
 import de.lierath.oauth2.client.controller.OauthSession;
@@ -35,26 +36,31 @@ public class ClientCredentialsFlowExecution implements OauthFlowExecution {
 			throw new OauthExecutionException("Invalid URI as Token URI!", e);
 		}
 
-		ClientAuthentication auth = new ClientSecretPost(new ClientID(inputData.getKey()),
+		ClientAuthentication auth = new ClientSecretBasic(new ClientID(inputData.getKey()),
 				new Secret(inputData.getSecret()));
 
 		Scope scope = Scope.parse(inputData.getScope());
 		TokenRequest request = new TokenRequest(uri, auth, new ClientCredentialsGrant(), scope);
 
 		OauthFlowResultData result = new OauthFlowResultData();
+		result.setOauthFlowType(OauthFlowType.CLIENT.getId());
 		HTTPRequest httpRequest;
+		HTTPResponse httpResponse;
 		TokenResponse response;
 		try {
 			httpRequest = request.toHTTPRequest();
 			result.setTokenRequest(OauthDisplayUtil.prettyPrint(httpRequest));
-			response = TokenResponse.parse(httpRequest.send());
-		} catch (ParseException | IOException e) {
+			httpResponse = httpRequest.send();
+		} catch (IOException e) {
 			log.error("Unable to parse token response", e);
 			throw new OauthExecutionException("Unable to parse token response", e);
 		}
-
-		result.setOauthFlowType(OauthFlowType.CLIENT.getId());
-		result.addAccessTokenResponse(response, inputData.getJwkUrl());
+		try {
+			response = TokenResponse.parse(httpResponse);
+			result.addAccessTokenResponse(response, inputData.getJwkUrl());
+		} catch (ParseException e) {
+			OauthDisplayUtil.prettyPrint(httpResponse);
+		}
 
 		session.setResult(result);
 		session.setNextPage(result.getOauthFlowType());

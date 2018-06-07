@@ -8,11 +8,13 @@ import lombok.Data;
 public class OauthFlowData implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	public static OauthFlowData forConf(OauthServerConfiguration serverConf, OauthClientConfiguration clientConf) {
+	public static OauthFlowData forConf(OauthServerConfiguration serverConf,
+			OauthTrustedClientConfiguration clientConf) {
 		OauthFlowData flow = new OauthFlowData();
 		flow.authorizeUrl = serverConf.getAuthorizeUrl();
 		flow.tokenUrl = serverConf.getTokenUrl();
 		flow.jwkUrl = serverConf.getJwkUrl();
+		flow.expectedSignatureAlgorithm = serverConf.getExpectedSignatureAlgorithm();
 		flow.key = clientConf.getKey();
 		flow.secret = clientConf.getSecret();
 		flow.redirectUri = clientConf.getRedirectUri();
@@ -28,6 +30,8 @@ public class OauthFlowData implements Serializable {
 	private String tokenUrl;
 
 	private String jwkUrl;
+
+	private String expectedSignatureAlgorithm;
 
 	private String key;
 

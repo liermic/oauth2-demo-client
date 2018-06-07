@@ -34,6 +34,8 @@ public class OauthFlowResultData {
 
 	private Boolean isValidSignature;
 
+	private String expectedSignatureAlgorithm;
+
 	public void addAccessTokenResponse(TokenResponse response, String jwkUrl) {
 		if (response.indicatesSuccess()) {
 			// token response
@@ -43,7 +45,8 @@ public class OauthFlowResultData {
 			AccessToken accessToken = successResponse.getTokens().getAccessToken();
 			String tokenString = OauthDisplayUtil.prettyPrint(accessToken);
 			this.accessToken = tokenString;
-			this.isValidSignature = JwtUtil.validateTokenSignature(accessToken.getValue(), jwkUrl);
+			this.isValidSignature = JwtUtil.validateTokenSignature(accessToken.getValue(), jwkUrl,
+					this.expectedSignatureAlgorithm);
 			// decoded claims set
 			try {
 				String claimsSet = OauthDisplayUtil.decodeClaimsSet(accessToken);
@@ -68,7 +71,8 @@ public class OauthFlowResultData {
 			AccessToken accessToken = successResponse.getAccessToken();
 			String tokenString = OauthDisplayUtil.prettyPrint(accessToken);
 			this.accessToken = tokenString;
-			this.isValidSignature = JwtUtil.validateTokenSignature(accessToken.getValue(), jwkUrl);
+			this.isValidSignature = JwtUtil.validateTokenSignature(accessToken.getValue(), jwkUrl,
+					this.expectedSignatureAlgorithm);
 			// decoded claims set
 			try {
 				String claimsSet = OauthDisplayUtil.decodeClaimsSet(accessToken);

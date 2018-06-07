@@ -32,6 +32,13 @@
 		   	<label for="jwkUrl">JWK URL:</label>
 		   	<input id="jwkUrl" type="text" th:field="*{jwkUrl}" width="200" />
 		   	<br/>    	
+		   	<label for="expectedSignatureAlgorithm">Expected signature algorithm:</label>
+		   	<select class="form-control" th:field="*{expectedSignatureAlgorithm}"
+				id="expectedSignatureAlgorithm">
+				<option th:value="'RS256'" th:text="'RS256'"></option>
+				<option th:value="'ES256'" th:text="'ES256'"></option>
+			</select>
+		   	<br/>    	
     	</div>
 	   		
 	   	<div>

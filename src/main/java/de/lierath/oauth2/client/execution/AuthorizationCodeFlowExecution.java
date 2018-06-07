@@ -45,8 +45,7 @@ public class AuthorizationCodeFlowExecution implements OauthFlowExecution {
 		Scope scope = Scope.parse(inputData.getScope());
 		State state = new State(session.getId().toString());
 		AuthorizationRequest request = new AuthorizationRequest(uri, rt, ResponseMode.QUERY, clientId, redirectURI,
-				scope, state);
-
+				scope, state, null, null);
 		// set redirect
 		HTTPRequest req = request.toHTTPRequest(Method.GET);
 		String rd = req.getURL() + "?" + req.getQuery();

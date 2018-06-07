@@ -20,7 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class JwtUtil {
 
-	public static boolean validateTokenSignature(String plainAccessToken, String jwkUrl) {
+	public static boolean validateTokenSignature(String plainAccessToken, String jwkUrl,
+			String expectedSignatureAlgorithm) {
 		// Set up a JWT processor to parse the tokens and then check their signature
 		// and validity time window (bounded by the "iat", "nbf" and "exp" claims)
 		ConfigurableJWTProcessor<SimpleSecurityContext> jwtProcessor = new DefaultJWTProcessor<>();
@@ -38,7 +39,7 @@ public class JwtUtil {
 		}
 
 		// The expected JWS algorithm of the access tokens (agreed out-of-band)
-		JWSAlgorithm expectedJWSAlg = JWSAlgorithm.RS256;
+		JWSAlgorithm expectedJWSAlg = JWSAlgorithm.parse(expectedSignatureAlgorithm); // i.e. RS256 or EC256
 
 		// Configure the JWT processor with a key selector to feed matching public
 		// RSA keys sourced from the JWK set URL

@@ -7,8 +7,8 @@ import lombok.Data;
 
 @Data
 @Component
-@ConfigurationProperties(prefix = "oauth.client")
-public class OauthClientConfiguration {
+@ConfigurationProperties(prefix = "oauth.trusted-client")
+public class OauthTrustedClientConfiguration {
 
 	private String key;
 
@@ -19,5 +19,4 @@ public class OauthClientConfiguration {
 	private String scope;
 
 	private String state;
-
 }
