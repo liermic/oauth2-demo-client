@@ -136,7 +136,7 @@ public class Oauth2ClientController {
 		URI redirectURI = new URI(inputData.getRedirectUri());
 		ClientAuthentication auth = new ClientSecretBasic(new ClientID(inputData.getKey()),
 				new Secret(inputData.getSecret()));
-		AuthorizationCodeGrant codeGrant = new AuthorizationCodeGrant(code, redirectURI);
+		AuthorizationCodeGrant codeGrant = new AuthorizationCodeGrant(code, redirectURI, inputData.getPkceVerifier());
 
 		// Make the token request
 		TokenRequest request = new TokenRequest(tokenURI, auth, codeGrant);

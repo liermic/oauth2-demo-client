@@ -53,6 +53,7 @@ public class PasswordGrantFlowExecution implements OauthFlowExecution {
 		}
 
 		OauthFlowResultData result = new OauthFlowResultData();
+		result.setExpectedSignatureAlgorithm(inputData.getExpectedSignatureAlgorithm());
 		result.setOauthFlowType(OauthFlowType.PASSWORD.getId());
 
 		HTTPRequest httpRequest;

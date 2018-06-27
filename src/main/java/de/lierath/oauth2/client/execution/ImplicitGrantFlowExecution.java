@@ -47,6 +47,7 @@ public class ImplicitGrantFlowExecution implements OauthFlowExecution {
 				scope, state, null, null);
 
 		OauthFlowResultData result = new OauthFlowResultData();
+		result.setExpectedSignatureAlgorithm(inputData.getExpectedSignatureAlgorithm());
 		result.setOauthFlowType(OauthFlowType.IMPLICIT.getId());
 		session.setResult(result);
 		HTTPRequest req = request.toHTTPRequest(Method.GET);

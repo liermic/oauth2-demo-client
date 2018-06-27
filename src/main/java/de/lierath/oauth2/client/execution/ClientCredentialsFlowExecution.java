@@ -44,6 +44,7 @@ public class ClientCredentialsFlowExecution implements OauthFlowExecution {
 
 		OauthFlowResultData result = new OauthFlowResultData();
 		result.setOauthFlowType(OauthFlowType.CLIENT.getId());
+		result.setExpectedSignatureAlgorithm(inputData.getExpectedSignatureAlgorithm());
 		HTTPRequest httpRequest;
 		HTTPResponse httpResponse;
 		TokenResponse response;

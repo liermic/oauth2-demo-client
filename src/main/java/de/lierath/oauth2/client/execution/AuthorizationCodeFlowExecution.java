@@ -11,6 +11,9 @@ import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest.Method;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.State;
+import com.nimbusds.oauth2.sdk.pkce.CodeChallenge;
+import com.nimbusds.oauth2.sdk.pkce.CodeChallengeMethod;
+import com.nimbusds.oauth2.sdk.pkce.CodeVerifier;
 
 import de.lierath.oauth2.client.controller.OauthSession;
 import de.lierath.oauth2.client.model.OauthFlowData;
@@ -44,8 +47,11 @@ public class AuthorizationCodeFlowExecution implements OauthFlowExecution {
 		ResponseType rt = new ResponseType("code");
 		Scope scope = Scope.parse(inputData.getScope());
 		State state = new State(session.getId().toString());
+		CodeChallengeMethod pkceMethod = CodeChallengeMethod.S256;
+		CodeVerifier pkceVerifier = new CodeVerifier();
+		inputData.setPkceVerifier(pkceVerifier);
 		AuthorizationRequest request = new AuthorizationRequest(uri, rt, ResponseMode.QUERY, clientId, redirectURI,
-				scope, state, null, null);
+				scope, state, CodeChallenge.compute(pkceMethod, pkceVerifier), pkceMethod);
 		// set redirect
 		HTTPRequest req = request.toHTTPRequest(Method.GET);
 		String rd = req.getURL() + "?" + req.getQuery();
@@ -55,6 +61,7 @@ public class AuthorizationCodeFlowExecution implements OauthFlowExecution {
 		// populate result
 		OauthFlowResultData result = new OauthFlowResultData();
 		result.setOauthFlowType(OauthFlowType.AUTH_CODE.getId());
+		result.setExpectedSignatureAlgorithm(inputData.getExpectedSignatureAlgorithm());
 		session.setResult(result);
 		result.setAuthorizeRequest(OauthDisplayUtil.prettyPrint(req));
 

@@ -2,6 +2,8 @@ package de.lierath.oauth2.client.model;
 
 import java.io.Serializable;
 
+import com.nimbusds.oauth2.sdk.pkce.CodeVerifier;
+
 import lombok.Data;
 
 @Data
@@ -46,5 +48,7 @@ public class OauthFlowData implements Serializable {
 	private String username;
 
 	private String userpassword;
+
+	private CodeVerifier pkceVerifier;
 
 }
