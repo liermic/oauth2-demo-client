@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthorizationCodeFlowExecution implements OauthFlowExecution {
 
 	@Override
-	public OauthFlowResultData execute(OauthFlowData inputData, OauthSession session) {
+	public OauthFlowResultData executeInitialRequest(OauthFlowData inputData, OauthSession session) {
 		URI uri;
 		try {
 			uri = new URI(inputData.getAuthorizeUrl());
@@ -34,12 +34,14 @@ public class AuthorizationCodeFlowExecution implements OauthFlowExecution {
 			log.error("Invalid URI as Authorize URI!", e);
 			throw new OauthExecutionException("Invalid URI as Authorize URI!", e);
 		}
-		URI redirectURI;
-		try {
-			redirectURI = new URI(inputData.getRedirectUri());
-		} catch (URISyntaxException e) {
-			log.error("Invalid URI as Redirect URI!", e);
-			throw new OauthExecutionException("Invalid URI as Redirect URI!", e);
+		URI redirectURI = null;
+		if (inputData.getRedirectUri() != null && !inputData.getRedirectUri().isEmpty()) {
+			try {
+				redirectURI = new URI(inputData.getRedirectUri());
+			} catch (URISyntaxException e) {
+				log.error("Invalid URI as Redirect URI!", e);
+				throw new OauthExecutionException("Invalid URI as Redirect URI!", e);
+			}
 		}
 
 		// prepare request
@@ -62,9 +64,9 @@ public class AuthorizationCodeFlowExecution implements OauthFlowExecution {
 		OauthFlowResultData result = new OauthFlowResultData();
 		result.setOauthFlowType(OauthFlowType.AUTH_CODE.getId());
 		result.setExpectedSignatureAlgorithm(inputData.getExpectedSignatureAlgorithm());
-		session.setResult(result);
 		result.setAuthorizeRequest(OauthDisplayUtil.prettyPrint(req));
 
+		session.setResult(result);
 		return result;
 	}
 

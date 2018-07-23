@@ -4,20 +4,20 @@ server:
 oauth:
   server:
     authorize-url: https://localhost:8443/oauth/authorize
-    tenant-id: aLUgkNjCT0O3ijr_Dj0jnw
-    organization-id: 3QWSQErUSqGy1yvah-HBzA
+    tenant-id: Dsu0tyYmTj-SV8vaD0m7ZQ
+    organization-id: eT_JGdhRQ3GXWZA5zBQhfA
     token-url: https://localhost:8443/oauth/tenantId/organizationId/token
     jwk-url: https://localhost:8443/oauth/tenantId/organizationId/jwk
-    expected-signature-algorithm: EC256   # EC256 or RS256
+    expected-signature-algorithm: RS256   # EC256 or RS256
     
   trusted-client:
-    key: UdGGXhjZRtWHZimV0TyY6Q
-    secret: KwFOF9y_SuCUaCHNOriENw
-    scope: email:read userinfo:read
-    redirect-uri: http://localhost:8086/api/authcode
+    key: QOoHZWlTTYKqiEt7jxtgWg
+    secret: xtPK4qScT5GW25LQLCMVVw
+    scope: view-records-all
+    redirect-uri: http://localhost:8086/api/oauth/redirect
 
   public-client:
-    key: yuCRxrYKRFKu0y-AdKhqDA
-    scope: email:read userinfo:read
-    redirect-uri: http://localhost:8086/api/decodeToken
+    key: UtJFmF-FRT-oJ45wvKHO7g
+    scope: change-address view-grades
+    redirect-uri: http://localhost:8086/api/oauth/redirect
     

@@ -8,10 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import com.nimbusds.oauth2.sdk.AuthorizationCode;
 import com.nimbusds.oauth2.sdk.AuthorizationCodeGrant;
@@ -29,10 +26,8 @@ import com.nimbusds.oauth2.sdk.http.ServletUtils;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.State;
 
-import de.lierath.oauth2.client.execution.OauthFlowExecution;
 import de.lierath.oauth2.client.model.OauthFlowData;
 import de.lierath.oauth2.client.model.OauthFlowResultData;
-import de.lierath.oauth2.client.model.OauthFlowType;
 import de.lierath.oauth2.client.model.OauthServerConfiguration;
 import de.lierath.oauth2.client.model.OauthTrustedClientConfiguration;
 import de.lierath.oauth2.client.util.OauthDisplayUtil;
@@ -40,10 +35,24 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * This controller is called when a resource owner authorizes this client.
+ * Depending on the current OAuth-Flow (iImplicit or authorization code), the
+ * token is read from the URL fragment or the query.
+ *
+ * @author Michael Lierath
+ *
+ */
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-public class Oauth2ClientController {
+public class Oauth2RedirectController {
+
+	private static final String PAGE_RESULT_IMPLICIT_FLOW = "implicitFlow";
+
+	private static final String PAGE_RESULT_AUTHCODE_FLOW = "authCodeFlow";
+
+	private static final String PAGE_DECODE_FRAGMENT = "decodeFragment";
 
 	@NonNull
 	OauthTrustedClientConfiguration clientConf;
@@ -51,37 +60,41 @@ public class Oauth2ClientController {
 	@NonNull
 	OauthServerConfiguration serverConf;
 
-	@GetMapping("/")
-	public String home(HttpServletRequest request, Model model) {
-		OauthFlowData oauthFlow = OauthFlowData.forConf(this.serverConf, this.clientConf);
-		model.addAttribute("oauthFlow", oauthFlow);
-		model.addAttribute("oauthFlowTypes", OauthFlowType.getAll());
-		return "home";
-	}
-
-	@PostMapping("/startFlow")
-	public String startFlow(HttpServletRequest httpRequest, @ModelAttribute OauthFlowData oauthFlow,
-			BindingResult bindingResult, Model model) throws URISyntaxException, ParseException, IOException {
-		log.debug(oauthFlow.getType());
-		bindingResult.getModel();
-		// start session for result handling
-		OauthSession session = OauthSession.open();
-		session.setInputData(oauthFlow);
-		// execute flow
-		OauthFlowType flowType = OauthFlowType.forId(oauthFlow.getType());
-		OauthFlowExecution execution = flowType.getExecution();
-		OauthFlowResultData result = execution.execute(oauthFlow, session);
-		result.setExpectedSignatureAlgorithm(oauthFlow.getExpectedSignatureAlgorithm());
-		model.addAttribute("result", result);
-		// redirect to result page (i.e. "clientCredentials")
-		return session.getNextPage(); // return "redirect:/home";
-	}
-
-	@GetMapping("/api/decodeToken")
+	/**
+	 * This serves as endpoint for the redirect from authorization server to this
+	 * client. It is used by both the implicit grant flow and the authorization
+	 * grant flow. The distinction between these flows is done inside the method.
+	 *
+	 * @param httpServletRequest
+	 *            the incoming request with token or error
+	 * @param model
+	 *            the generic UI model that will be used to prepare the result page
+	 * @return either a redirect to the fragment decoding page or to the result page
+	 *         for authorization code flow.
+	 */
+	@GetMapping("/api/oauth/redirect")
 	public String receiveAuthorizeResponse(HttpServletRequest httpServletRequest, Model model) {
-		return "decodeFragment";
+		String queryString = httpServletRequest.getQueryString();
+		if (queryString == null || queryString.isEmpty()) {
+			// IMPLICIT GRANT with token in fragment, decode and continue with implicitGrant
+			return PAGE_DECODE_FRAGMENT;
+		} else {
+			// AUTHORIZATION CODE GRANT with code in query
+			receiveAuthCodeRedirect(httpServletRequest, model);
+			return PAGE_RESULT_AUTHCODE_FLOW;
+		}
 	}
 
+	/**
+	 * This is called after decoding the token from URL fragment. The decoding page
+	 * will have transferred the fragment into the query.
+	 *
+	 * @param httpServletRequest
+	 *            the request now contains the token response as query
+	 * @param model
+	 *            the generic UI model that will hold the data for the result page
+	 * @return the result page for implicit flow
+	 */
 	@GetMapping("/implicitGrant")
 	public String implicitGrant(HttpServletRequest httpServletRequest, Model model) {
 		try {
@@ -96,11 +109,10 @@ public class Oauth2ClientController {
 		} catch (IOException | ParseException e) {
 			log.error("Unable to parse incoming http request.", e);
 		}
-		return "implicitFlow";
+		return PAGE_RESULT_IMPLICIT_FLOW;
 	}
 
-	@GetMapping("/api/authcode")
-	public String authorizationCode(HttpServletRequest httpServletRequest, Model model) {
+	private void receiveAuthCodeRedirect(HttpServletRequest httpServletRequest, Model model) {
 		HTTPRequest httpRequest;
 		try {
 			httpRequest = ServletUtils.createHTTPRequest(httpServletRequest);
@@ -127,13 +139,12 @@ public class Oauth2ClientController {
 		} catch (URISyntaxException e) {
 			log.error("Invalid URI of token endpoint.", e);
 		}
-		return OauthFlowType.AUTH_CODE.getId();
 	}
 
 	private void getTokenForCode(OauthFlowData inputData, AuthorizationCode code, OauthFlowResultData result)
 			throws URISyntaxException, ParseException, IOException {
 		URI tokenURI = new URI(inputData.getTokenUrl());
-		URI redirectURI = new URI(inputData.getRedirectUri());
+		URI redirectURI = inputData.getRedirectUri() == null ? null : new URI(inputData.getRedirectUri());
 		ClientAuthentication auth = new ClientSecretBasic(new ClientID(inputData.getKey()),
 				new Secret(inputData.getSecret()));
 		AuthorizationCodeGrant codeGrant = new AuthorizationCodeGrant(code, redirectURI, inputData.getPkceVerifier());
@@ -147,5 +158,4 @@ public class Oauth2ClientController {
 		// add token to result
 		result.addAccessTokenResponse(response, inputData.getJwkUrl());
 	}
-
 }

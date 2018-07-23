@@ -52,32 +52,11 @@
 	    	<br/>
 	    	
 	    	<label for="redirectURI">Redirect URI:</label>
-	    	<select class="form-control" th:field="*{redirectUri}"
-				id="redirectURI">
-				<option th:value="'http://localhost:8086/api/authcode'" th:text="'http://localhost:8086/api/authcode'"></option>
-				<option th:value="'http://localhost:8086/api/decodeToken'" th:text="'http://localhost:8086/api/decodeToken'"></option>
-			</select>
-	    	<!-- <input id="redirectURI" type="text" th:field="*{redirectUri}" width="200" /> -->
+	    	<input id="redirectURI" type="text" th:field="*{redirectUri}" width="200" />
 	    	<br/>
 	    	
 	    	<label for="scope">Request Scope:</label>
 	    	<input id="scope" type="text" th:field="*{scope}" width="100" />
-	    	<br/>
-	    	
-	    	<p>
-	    	Public: jJgIcer4QiKcyqFXQ6DXJQ <br/>
-	    	Trusted: XPOnkRPuRFSFx65hnUmuCw &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; rpDuoW-mTYCcnmZecFdaFw
-	    	</p>
-	   	</div>
-
-	   	<div>
-	    	<h3>User for Password Grant</h3>
-	    	<label for="username">Username:</label>
-	    	<input id="username" type="text" th:field="*{username}" width="100" />
-	    	<br/>
-	    	
-	    	<label for="userpassword">User password:</label>
-	    	<input id="userpassword" type="text" th:field="*{userpassword}" width="100" />
 	    	<br/>
 	   	</div>
 

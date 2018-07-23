@@ -45,10 +45,6 @@ public class OauthFlowData implements Serializable {
 
 	private String state;
 
-	private String username;
-
-	private String userpassword;
-
 	private CodeVerifier pkceVerifier;
 
 }

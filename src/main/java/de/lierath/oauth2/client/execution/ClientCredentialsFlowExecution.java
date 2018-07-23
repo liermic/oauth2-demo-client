@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ClientCredentialsFlowExecution implements OauthFlowExecution {
 
 	@Override
-	public OauthFlowResultData execute(OauthFlowData inputData, OauthSession session) {
+	public OauthFlowResultData executeInitialRequest(OauthFlowData inputData, OauthSession session) {
 		URI uri;
 		try {
 			uri = new URI(inputData.getTokenUrl());

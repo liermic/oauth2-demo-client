@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>de.lierath</groupId>
-	<artifactId>oauth2-demo-client</artifactId>
+	<artifactId>oauth-demo-client</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 

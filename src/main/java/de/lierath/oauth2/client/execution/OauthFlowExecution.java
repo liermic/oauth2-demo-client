@@ -6,6 +6,6 @@ import de.lierath.oauth2.client.model.OauthFlowResultData;
 
 public interface OauthFlowExecution {
 
-	OauthFlowResultData execute(OauthFlowData inputData, OauthSession session);
+	OauthFlowResultData executeInitialRequest(OauthFlowData inputData, OauthSession session);
 
 }

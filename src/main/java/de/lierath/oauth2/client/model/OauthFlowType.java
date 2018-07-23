@@ -9,7 +9,6 @@ import de.lierath.oauth2.client.execution.AuthorizationCodeFlowExecution;
 import de.lierath.oauth2.client.execution.ClientCredentialsFlowExecution;
 import de.lierath.oauth2.client.execution.ImplicitGrantFlowExecution;
 import de.lierath.oauth2.client.execution.OauthFlowExecution;
-import de.lierath.oauth2.client.execution.PasswordGrantFlowExecution;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -27,13 +26,6 @@ public enum OauthFlowType {
 		@Override
 		public OauthFlowExecution getExecution() {
 			return new ImplicitGrantFlowExecution();
-		}
-	},
-
-	PASSWORD("passwordFlow", "Resource Owner Password Grant") {
-		@Override
-		public OauthFlowExecution getExecution() {
-			return new PasswordGrantFlowExecution();
 		}
 	},
 
