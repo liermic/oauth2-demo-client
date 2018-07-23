@@ -13,11 +13,11 @@ oauth:
   trusted-client:
     key: QOoHZWlTTYKqiEt7jxtgWg
     secret: xtPK4qScT5GW25LQLCMVVw
-    scope: view-records-all
+    #scope: view-records-all
     redirect-uri: http://localhost:8086/api/oauth/redirect
 
   public-client:
     key: UtJFmF-FRT-oJ45wvKHO7g
-    scope: change-address view-grades
+    #scope: change-address view-grades
     redirect-uri: http://localhost:8086/api/oauth/redirect
     

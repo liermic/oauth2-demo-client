@@ -26,46 +26,54 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ClientCredentialsFlowExecution implements OauthFlowExecution {
 
+	private OauthFlowResultData result;
+
+	public ClientCredentialsFlowExecution() {
+		this.result = new OauthFlowResultData();
+		this.result.setOauthFlowType(OauthFlowType.CLIENT.getId());
+	}
+
 	@Override
 	public OauthFlowResultData executeInitialRequest(OauthFlowData inputData, OauthSession session) {
-		URI uri;
+		this.result.setExpectedSignatureAlgorithm(inputData.getExpectedSignatureAlgorithm());
+
+		HTTPResponse httpResponse;
+		TokenResponse response;
+		// request token
 		try {
-			uri = new URI(inputData.getTokenUrl());
+			httpResponse = requestToken(new URI(inputData.getTokenUrl()), inputData.getKey(), inputData.getSecret(),
+					Scope.parse(inputData.getScope()));
+		} catch (IOException e) {
+			log.error("Unable to parse token response", e);
+			throw new OauthExecutionException("Unable to parse token response", e);
 		} catch (URISyntaxException e) {
 			log.error("Invalid URI as Token URI!", e);
 			throw new OauthExecutionException("Invalid URI as Token URI!", e);
 		}
-
-		ClientAuthentication auth = new ClientSecretBasic(new ClientID(inputData.getKey()),
-				new Secret(inputData.getSecret()));
-
-		Scope scope = Scope.parse(inputData.getScope());
-		TokenRequest request = new TokenRequest(uri, auth, new ClientCredentialsGrant(), scope);
-
-		OauthFlowResultData result = new OauthFlowResultData();
-		result.setOauthFlowType(OauthFlowType.CLIENT.getId());
-		result.setExpectedSignatureAlgorithm(inputData.getExpectedSignatureAlgorithm());
-		HTTPRequest httpRequest;
-		HTTPResponse httpResponse;
-		TokenResponse response;
-		try {
-			httpRequest = request.toHTTPRequest();
-			result.setTokenRequest(OauthDisplayUtil.prettyPrint(httpRequest));
-			httpResponse = httpRequest.send();
-		} catch (IOException e) {
-			log.error("Unable to parse token response", e);
-			throw new OauthExecutionException("Unable to parse token response", e);
-		}
+		// parse response
 		try {
 			response = TokenResponse.parse(httpResponse);
-			result.addAccessTokenResponse(response, inputData.getJwkUrl());
+			this.result.addAccessTokenResponse(response, inputData.getJwkUrl());
 		} catch (ParseException e) {
 			OauthDisplayUtil.prettyPrint(httpResponse);
 		}
 
-		session.setResult(result);
-		session.setNextPage(result.getOauthFlowType());
-		return result;
+		// set session variables
+		session.setResult(this.result);
+		session.setNextPage(this.result.getOauthFlowType());
+		return this.result;
+	}
+
+	private HTTPResponse requestToken(URI uri, String clientID, String clientSecret, Scope scope) throws IOException {
+		// prepare client authentication (Http Basic)
+		ClientAuthentication auth = new ClientSecretBasic(new ClientID(clientID), new Secret(clientSecret));
+		// create request object and transform to HttpRequest
+		TokenRequest request = new TokenRequest(uri, auth, new ClientCredentialsGrant(), scope);
+		HTTPRequest httpRequest = request.toHTTPRequest();
+		// save request for display purposes
+		this.result.setTokenRequest(OauthDisplayUtil.prettyPrint(httpRequest));
+		// send request and return response
+		return httpRequest.send();
 	}
 
 }
