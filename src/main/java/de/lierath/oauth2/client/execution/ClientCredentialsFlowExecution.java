@@ -68,7 +68,8 @@ public class ClientCredentialsFlowExecution implements OauthFlowExecution {
 		// prepare client authentication (Http Basic)
 		ClientAuthentication auth = new ClientSecretBasic(new ClientID(clientID), new Secret(clientSecret));
 		// create request object and transform to HttpRequest
-		TokenRequest request = new TokenRequest(uri, auth, new ClientCredentialsGrant(), scope);
+		TokenRequest request = scope == null ? new TokenRequest(uri, auth, new ClientCredentialsGrant())
+				: new TokenRequest(uri, auth, new ClientCredentialsGrant(), scope);
 		HTTPRequest httpRequest = request.toHTTPRequest();
 		// save request for display purposes
 		this.result.setTokenRequest(OauthDisplayUtil.prettyPrint(httpRequest));
