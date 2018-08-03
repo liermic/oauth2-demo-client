@@ -5,8 +5,8 @@
 
 	<groupId>de.lierath</groupId>
 	<artifactId>oauth-demo-client</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
 
 	<name>oauth2-demo-client</name>
 	<description>Client for demonstration of OAuth 2.0 flows</description>
