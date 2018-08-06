@@ -10,6 +10,7 @@ import de.lierath.oauth2.client.execution.OauthFlowExecution;
 import de.lierath.oauth2.client.model.OauthFlowData;
 import de.lierath.oauth2.client.model.OauthFlowResultData;
 import de.lierath.oauth2.client.model.OauthFlowType;
+import de.lierath.oauth2.client.model.OauthPublicClientConfiguration;
 import de.lierath.oauth2.client.model.OauthServerConfiguration;
 import de.lierath.oauth2.client.model.OauthTrustedClientConfiguration;
 import lombok.NonNull;
@@ -32,7 +33,10 @@ public class Oauth2ClientUIController {
 	private static final String PAGE_HOME = "home";
 
 	@NonNull
-	OauthTrustedClientConfiguration clientConf;
+	OauthPublicClientConfiguration publicClientConf;
+
+	@NonNull
+	OauthTrustedClientConfiguration trustedClientConf;
 
 	@NonNull
 	OauthServerConfiguration serverConf;
@@ -46,7 +50,7 @@ public class Oauth2ClientUIController {
 	 */
 	@GetMapping("/")
 	public String home(Model model) {
-		OauthFlowData oauthFlow = OauthFlowData.forConf(this.serverConf, this.clientConf);
+		OauthFlowData oauthFlow = OauthFlowData.forConf(this.serverConf, this.trustedClientConf);
 		model.addAttribute("oauthFlow", oauthFlow);
 		model.addAttribute("oauthFlowTypes", OauthFlowType.getAll());
 		return PAGE_HOME;
@@ -65,7 +69,7 @@ public class Oauth2ClientUIController {
 	 *            client credentials flow
 	 * @return the next page to show
 	 */
-	@PostMapping("/startFlow")
+	@PostMapping(value = "/processForm", params = "startFlow")
 	public String startFlow(@ModelAttribute OauthFlowData oauthFlow, Model model) {
 		log.debug(oauthFlow.getType());
 		// start session for result handling
@@ -79,6 +83,50 @@ public class Oauth2ClientUIController {
 		model.addAttribute("result", result);
 		// redirect to auth server or result page
 		return session.getNextPage();
+	}
+
+	/**
+	 * This will change the current user input to use the configured trusted client.
+	 * Other input data will remain unchanged.
+	 *
+	 * @param oauthFlowData
+	 *            the current form data
+	 * @param model
+	 *            the outgoing model
+	 * @return the starting page
+	 */
+	@PostMapping(value = "/processForm", params = "trustedClient")
+	public String useTrustedClient(@ModelAttribute OauthFlowData oauthFlowData, Model model) {
+		oauthFlowData.setKey(this.trustedClientConf.getKey());
+		oauthFlowData.setSecret(this.trustedClientConf.getSecret());
+		oauthFlowData.setRedirectUri(this.trustedClientConf.getRedirectUri());
+		oauthFlowData.setScope(this.trustedClientConf.getScope());
+
+		model.addAttribute("oauthFlow", oauthFlowData);
+		model.addAttribute("oauthFlowTypes", OauthFlowType.getAll());
+		return PAGE_HOME;
+	}
+
+	/**
+	 * This will change the current user input to use the configured public client.
+	 * Other input data will remain unchanged.
+	 *
+	 * @param oauthFlowData
+	 *            the current form data
+	 * @param model
+	 *            the outgoing model
+	 * @return the starting page
+	 */
+	@PostMapping(value = "/processForm", params = "publicClient")
+	public String usePublicClient(@ModelAttribute OauthFlowData oauthFlowData, Model model) {
+		oauthFlowData.setKey(this.publicClientConf.getKey());
+		oauthFlowData.setSecret(null);
+		oauthFlowData.setRedirectUri(this.publicClientConf.getRedirectUri());
+		oauthFlowData.setScope(this.publicClientConf.getScope());
+
+		model.addAttribute("oauthFlow", oauthFlowData);
+		model.addAttribute("oauthFlowTypes", OauthFlowType.getAll());
+		return PAGE_HOME;
 	}
 
 }

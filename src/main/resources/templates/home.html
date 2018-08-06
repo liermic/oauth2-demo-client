@@ -6,7 +6,7 @@
         <link rel="stylesheet" type="text/css" href="/css/default.css">
     </head>
     <body>
-        <form id="flowSelection" th:action="@{/startFlow}" method="post" th:object="${oauthFlow}">
+        <form id="flowSelection" th:action="@{/processForm}" method="post" th:object="${oauthFlow}">
     	
     	<h2>Select Flow for OAuth 2.0</h2>
     	
@@ -18,7 +18,7 @@
 					<option th:each="flowType : ${oauthFlowTypes}" th:value="${flowType.id}"
 						th:text="${flowType.name}"></option>
 				</select>
-		<input type="submit" value="Start Flow" />
+		<input type="submit" name="startFlow" value="Start Flow" />
 		</div>
     	<div>
 			<h3>Server Configuration</h3>
@@ -43,6 +43,10 @@
 	   		
 	   	<div>
 	    	<h3>Client Configuration</h3>
+	    	<input type="submit" name="trustedClient" value="Use Trusted Client Configuration" />
+	    	<input type="submit" name="publicClient" value="Use Public Client Configuration" />
+	    	<br/>
+	    	
 	    	<label for="clientKey">Client Key:</label>
 	    	<input id="clientKey" type="text" th:field="*{key}" width="100" />
 	    	<br/>
