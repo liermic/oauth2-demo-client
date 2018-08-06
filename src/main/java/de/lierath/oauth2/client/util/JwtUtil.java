@@ -11,6 +11,8 @@ import com.nimbusds.jose.proc.BadJOSEException;
 import com.nimbusds.jose.proc.JWSKeySelector;
 import com.nimbusds.jose.proc.JWSVerificationKeySelector;
 import com.nimbusds.jose.proc.SimpleSecurityContext;
+import com.nimbusds.jose.util.DefaultResourceRetriever;
+import com.nimbusds.jose.util.ResourceRetriever;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.proc.ConfigurableJWTProcessor;
 import com.nimbusds.jwt.proc.DefaultJWTProcessor;
@@ -32,7 +34,8 @@ public class JwtUtil {
 		// also gracefully handle key-rollover
 		JWKSource<SimpleSecurityContext> keySource;
 		try {
-			keySource = new RemoteJWKSet<>(new URL(jwkUrl));
+			ResourceRetriever resRetriever = new DefaultResourceRetriever(5000, 5000);
+			keySource = new RemoteJWKSet<>(new URL(jwkUrl), resRetriever);
 		} catch (MalformedURLException e1) {
 			log.error("Unable to parse jwkUrl as URL!", e1);
 			return false;
