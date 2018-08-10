@@ -8,31 +8,60 @@
     <body>
         <form id="flowSelection" th:action="@{/processForm}" method="post" th:object="${oauthFlow}">
     	
-    	<h2>Select Flow for OAuth 2.0</h2>
+    	<h2>Demo-Client for OAuth 2.0 in OpenConjurer</h2>
     	
     	<div>
-			<h3>Select Flow</h3>
-				<label for="oauthFlow">OAuth flow to start:</label>
-				<select class="form-control" th:field="*{type}"
-					id="oauthFlow">
-					<option th:each="flowType : ${oauthFlowTypes}" th:value="${flowType.id}"
-						th:text="${flowType.name}"></option>
-				</select>
+			<h3>Select OAuth 2.0 Grant Type</h3>
+			<i>Select the grant type that will be simulated. Make sure to match the requirements by selecting a trusted client (with secret) or a public client (without secret).</i>
+			<p />
+				<!-- <ul> -->
+				  <div th:each="flowType : ${oauthFlowTypes}">
+				    <input class="radio" type="radio" th:field="*{type}" th:value="${flowType.id}" />
+				    <label th:for="${#ids.prev('type')}" th:text="${flowType.name} + ': ' + ${flowType.description}"></label>
+				    <br/>
+				  </div>
 		<input type="submit" name="startFlow" value="Start Flow" />
 		</div>
-    	<div>
+
+	   	<div>
+	    	<h3>Client Configuration</h3>
+	    	<i>Trusted and public client can be used from configuration or changed as needed. Values default to trusted client.</i> 
+	    	<p />
+	    	<input type="submit" name="trustedClient" value="Use Trusted Client Configuration" />
+	    	<input type="submit" name="publicClient" value="Use Public Client Configuration" />
+	    	<br/>
+	    	
+	    	<label for="clientKey">Client Key (required):</label><br />
+	    	<input id="clientKey" type="text" th:field="*{key}" width="100" />
+	    	<br/>
+	    	
+	    	<label for="clientSecret">Client Secret (required for trusted clients):</label><br />
+	    	<input id="clientSecret" type="text" th:field="*{secret}" width="100" />
+	    	<br/>
+	    	
+	    	<label for="redirectURI">Redirect URI (optional):</label><br />
+	    	<input id="redirectURI" type="text" th:field="*{redirectUri}" width="200" />
+	    	<br/>
+	    	
+	    	<label for="scope">Request Scope (optional):</label><br />
+	    	<input id="scope" type="text" th:field="*{scope}" width="100" />
+	    	<br/>
+	   	</div>
+	   	
+	   	<div>
 			<h3>Server Configuration</h3>
-    	
-	    	<label for="authorizeUrl">Authorization URL:</label>
+    		<i>This is the server from your configuration. Change values as needed.</i>
+    		<p />
+	    	<label for="authorizeUrl">Authorization URL:</label><br />
 	    	<input id="authorizeUrl" type="text" th:field="*{authorizeUrl}" width="200" />
 	    	<br/>
-		   	<label for="tokenUrl">Token URL:</label>
+		   	<label for="tokenUrl">Token URL:</label><br />
 		   	<input id="tokenUrl" type="text" th:field="*{tokenUrl}" width="200" />
 		   	<br/>    	
-		   	<label for="jwkUrl">JWK URL:</label>
+		   	<label for="jwkUrl">JWK URL:</label><br />
 		   	<input id="jwkUrl" type="text" th:field="*{jwkUrl}" width="200" />
 		   	<br/>    	
-		   	<label for="expectedSignatureAlgorithm">Expected signature algorithm:</label>
+		   	<label for="expectedSignatureAlgorithm">Expected signature algorithm:</label><br />
 		   	<select class="form-control" th:field="*{expectedSignatureAlgorithm}"
 				id="expectedSignatureAlgorithm">
 				<option th:value="'RS256'" th:text="'RS256'"></option>
@@ -40,29 +69,6 @@
 			</select>
 		   	<br/>    	
     	</div>
-	   		
-	   	<div>
-	    	<h3>Client Configuration</h3>
-	    	<input type="submit" name="trustedClient" value="Use Trusted Client Configuration" />
-	    	<input type="submit" name="publicClient" value="Use Public Client Configuration" />
-	    	<br/>
-	    	
-	    	<label for="clientKey">Client Key:</label>
-	    	<input id="clientKey" type="text" th:field="*{key}" width="100" />
-	    	<br/>
-	    	
-	    	<label for="clientSecret">Client Secret:</label>
-	    	<input id="clientSecret" type="text" th:field="*{secret}" width="100" />
-	    	<br/>
-	    	
-	    	<label for="redirectURI">Redirect URI:</label>
-	    	<input id="redirectURI" type="text" th:field="*{redirectUri}" width="200" />
-	    	<br/>
-	    	
-	    	<label for="scope">Request Scope:</label>
-	    	<input id="scope" type="text" th:field="*{scope}" width="100" />
-	    	<br/>
-	   	</div>
 
 	</form>
     </body>

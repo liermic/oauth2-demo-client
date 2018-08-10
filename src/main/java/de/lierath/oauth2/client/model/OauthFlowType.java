@@ -15,21 +15,24 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum OauthFlowType {
 
-	AUTH_CODE("authCodeFlow", "Authorization Code Grant") {
+	AUTH_CODE("authCodeFlow", "Authorization Code Grant",
+			"Authorization request will return code to redirect URL; code is used to request access token. Requires trusted client (with secret).") {
 		@Override
 		public OauthFlowExecution getExecution() {
 			return new AuthorizationCodeFlowExecution();
 		}
 	},
 
-	IMPLICIT("implicitFlow", "Implicit Grant") {
+	IMPLICIT("implicitFlow", "Implicit Grant",
+			"Authorization request will return access token to redirect URL. Denied to trusted clients.") {
 		@Override
 		public OauthFlowExecution getExecution() {
 			return new ImplicitGrantFlowExecution();
 		}
 	},
 
-	CLIENT("clientCredentialsFlow", "Client Credentials Grant") {
+	CLIENT("clientCredentialsFlow", "Client Credentials Grant",
+			"No authorization by resource owner, server will return token in response body. Requires trusted client (with secret).") {
 		@Override
 		public OauthFlowExecution getExecution() {
 			return new ClientCredentialsFlowExecution();
@@ -41,6 +44,9 @@ public enum OauthFlowType {
 
 	@Getter
 	private final String name;
+
+	@Getter
+	private final String description;
 
 	private static Map<String, OauthFlowType> cache = new HashMap<>();
 
