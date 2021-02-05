@@ -40,7 +40,7 @@ public class Oauth2ClientUIController {
 
 	@NonNull
 	OauthServerConfiguration serverConf;
-
+	
 	/**
 	 * Initializes the model for input data and move on to the starting page.
 	 *
@@ -71,6 +71,8 @@ public class Oauth2ClientUIController {
 	 */
 	@PostMapping(value = "/processForm", params = "startFlow")
 	public String startFlow(@ModelAttribute OauthFlowData oauthFlow, Model model) {
+		// update conf
+		updateConfiguration(oauthFlow);
 		log.debug(oauthFlow.getType());
 		// start session for result handling
 		OauthSession session = OauthSession.open();
@@ -83,6 +85,26 @@ public class Oauth2ClientUIController {
 		model.addAttribute("result", result);
 		// redirect to auth server or result page
 		return session.getNextPage();
+	}
+
+	private void updateConfiguration(OauthFlowData oauthFlow) {
+		// serverconf
+		this.serverConf.setAuthorizeUrl(oauthFlow.getAuthorizeUrl());
+		this.serverConf.setTokenUrl(oauthFlow.getTokenUrl());
+		this.serverConf.setExpectedSignatureAlgorithm(oauthFlow.getExpectedSignatureAlgorithm());
+		this.serverConf.setJwkUrl(oauthFlow.getJwkUrl());
+		
+		// clientconf
+		if(oauthFlow.getSecret() != null && !oauthFlow.getSecret().isEmpty()) {
+			this.trustedClientConf.setKey(oauthFlow.getKey());
+			this.trustedClientConf.setSecret(oauthFlow.getSecret());
+			this.trustedClientConf.setRedirectUri(oauthFlow.getRedirectUri());
+			this.trustedClientConf.setScope(oauthFlow.getScope());
+		} else {
+			this.publicClientConf.setKey(oauthFlow.getKey());
+			this.publicClientConf.setRedirectUri(oauthFlow.getRedirectUri());
+			this.publicClientConf.setScope(oauthFlow.getScope());
+		}
 	}
 
 	/**

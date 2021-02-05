@@ -24,6 +24,9 @@ public class JwtUtil {
 
 	public static boolean validateTokenSignature(String plainAccessToken, String jwkUrl,
 			String expectedSignatureAlgorithm) {
+		if("NONE".equals(expectedSignatureAlgorithm)) {
+			return true;
+		}
 		// Set up a JWT processor to parse the tokens and then check their signature
 		// and validity time window (bounded by the "iat", "nbf" and "exp" claims)
 		ConfigurableJWTProcessor<SimpleSecurityContext> jwtProcessor = new DefaultJWTProcessor<>();
@@ -54,7 +57,7 @@ public class JwtUtil {
 		try {
 			JWTClaimsSet claimsSet = jwtProcessor.process(plainAccessToken, ctx);
 			// Print out the token claims set
-			log.debug(claimsSet.toJSONObject().toJSONString());
+//			log.debug(claimsSet.toJSONObject().toJSONString());
 			return true;
 		} catch (BadJOSEException | JOSEException | java.text.ParseException e) {
 			log.error("Invalid JWT!", e);

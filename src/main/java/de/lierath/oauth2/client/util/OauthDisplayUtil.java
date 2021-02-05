@@ -20,6 +20,9 @@ public class OauthDisplayUtil {
 	public static String prettyPrint(AccessToken accessToken) {
 		String token = accessToken.toJSONObject().getAsString("access_token");
 		String[] splitToken = token.split(JWT_SEPERATOR_REGEX);
+		if(splitToken.length == 1) {
+			return splitToken[0];
+		}
 		StringBuilder sb = new StringBuilder();
 		sb.append(splitToken[0]).append(NEW_LINE);
 		sb.append(JWT_SEPERATOR).append(NEW_LINE);
@@ -32,6 +35,9 @@ public class OauthDisplayUtil {
 	public static String decodeClaimsSet(AccessToken accessToken) throws ParseException {
 		String token = accessToken.toJSONObject().getAsString("access_token");
 		String[] splitToken = token.split(JWT_SEPERATOR_REGEX);
+		if(splitToken.length == 1) {
+			return splitToken[0];
+		}
 
 		String jwsHeader = new String(Base64.getDecoder().decode(splitToken[0]));
 		String claimsSet = new String(Base64.getDecoder().decode(splitToken[1]));

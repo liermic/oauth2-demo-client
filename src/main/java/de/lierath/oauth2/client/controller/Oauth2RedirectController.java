@@ -145,12 +145,19 @@ public class Oauth2RedirectController {
 			throws URISyntaxException, ParseException, IOException {
 		URI tokenURI = new URI(inputData.getTokenUrl());
 		URI redirectURI = inputData.getRedirectUri() == null ? null : new URI(inputData.getRedirectUri());
-		ClientAuthentication auth = new ClientSecretBasic(new ClientID(inputData.getKey()),
-				new Secret(inputData.getSecret()));
+		
+		ClientID clientId = new ClientID(inputData.getKey());
 		AuthorizationCodeGrant codeGrant = new AuthorizationCodeGrant(code, redirectURI, inputData.getPkceVerifier());
-
+		TokenRequest request;
+		if(inputData.getSecret() != null && !inputData.getSecret().isEmpty()) {
+			ClientAuthentication auth;
+			auth = new ClientSecretBasic(clientId,
+					new Secret(inputData.getSecret()));
+			request = new TokenRequest(tokenURI, auth, codeGrant);
+		} else {
+			request = new TokenRequest(tokenURI, clientId, codeGrant);
+		}
 		// Make the token request
-		TokenRequest request = new TokenRequest(tokenURI, auth, codeGrant);
 		HTTPRequest httpRequest = request.toHTTPRequest();
 		result.setTokenRequest(OauthDisplayUtil.prettyPrint(httpRequest));
 		TokenResponse response = TokenResponse.parse(httpRequest.send());

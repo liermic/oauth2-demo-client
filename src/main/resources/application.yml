@@ -3,12 +3,10 @@ server:
  
 oauth:
   server:
-    authorize-url: https://localhost:8443/oauth/authorize/
-    tenant-id: YYkqP3t2SgKqXdT-AQYNmQ
-    organization-id: I_f1omAGRai0ST4DKPxVEA
-    token-url: https://localhost:8443/oauth/tenantId/organizationId/token/
-    jwk-url: https://localhost:8443/oauth/tenantId/organizationId/jwk
-    expected-signature-algorithm: RS256   # EC256 or RS256
+    authorize-url: https://localhost/oauth/authorize/
+    token-url: https://localhost/oauth/token
+    #jwk-url: https://localhost/oauth/jwk
+    expected-signature-algorithm: NONE   # EC256 or RS256 or NONE
     
   trusted-client:
     key: dVs2IYWeRSioKOsfP5Gv8A

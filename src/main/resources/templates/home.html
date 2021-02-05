@@ -8,7 +8,7 @@
     <body>
         <form id="flowSelection" th:action="@{/processForm}" method="post" th:object="${oauthFlow}">
     	
-    	<h2>Demo-Client for OAuth 2.0 in OpenConjurer</h2>
+    	<h2>Demo-Client for OAuth 2.0</h2>
     	
     	<div>
 			<h3>Select OAuth 2.0 Grant Type</h3>
@@ -64,6 +64,7 @@
 		   	<label for="expectedSignatureAlgorithm">Expected signature algorithm:</label><br />
 		   	<select class="form-control" th:field="*{expectedSignatureAlgorithm}"
 				id="expectedSignatureAlgorithm">
+				<option th:value="'NONE'" th:text="'NONE'"></option>
 				<option th:value="'RS256'" th:text="'RS256'"></option>
 				<option th:value="'ES256'" th:text="'ES256'"></option>
 			</select>
